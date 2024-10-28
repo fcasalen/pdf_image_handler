@@ -1,2 +1,3 @@
 include requirements.txt
 global-exclude *_test.py
+global-exclude pdf_image_handler/poppler_path.txt
