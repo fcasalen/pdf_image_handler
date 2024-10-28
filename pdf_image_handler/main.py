@@ -2,7 +2,7 @@ from pdf2image import convert_from_bytes
 from PIL import Image
 from io import BytesIO
 from os.path import exists, dirname, join
-from tkinter import filedialog, dialog
+from tkinter import filedialog
 
 root_poppler_path = join(dirname(__file__), 'poppler_path.txt')
 
