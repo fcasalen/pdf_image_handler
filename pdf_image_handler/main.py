@@ -15,6 +15,8 @@ def get_valid_poppler_path(poppler_path:str = None):
     if poppler_path == root_poppler_path:
         with open(root_poppler_path, 'r', encoding='utf-8') as f:
             poppler_path = f.read()
+    if not exists(poppler_path):
+        poppler_path = None
     valid_poppler_path = False
     while not valid_poppler_path:
         if not poppler_path:
