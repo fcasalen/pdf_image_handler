@@ -5,3 +5,4 @@ __pycache__
 *dist*
 *.gitkeep
 *build*
+poppler_path.txt

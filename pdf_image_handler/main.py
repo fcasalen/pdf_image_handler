@@ -1,29 +1,60 @@
 from pdf2image import convert_from_bytes
 from PIL import Image
 from io import BytesIO
-from os.path import exists
+from os.path import exists, dirname, join
+from tkinter import filedialog
+
+root_poppler_path = join(dirname(__file__), 'poppler_path.txt')
 
 def image_to_bytes(image):
     buffered = BytesIO()
     image.save(buffered, format="PNG")
     return buffered.getvalue()
 
-class PDFImageHandler:
-    def __init__(self, poppler_path:str) -> None:
-        self.poppler_path = poppler_path
-
-    def get_list_of_images_bytes(self, file_path_or_bytes:str|bytes):
+def get_valid_poppler_path(poppler_path:str = None):
+    if poppler_path == root_poppler_path:
+        with open(root_poppler_path, 'r', encoding='utf-8') as f:
+            poppler_path = f.read()
+    valid_poppler_path = False
+    while not valid_poppler_path:
+        if not poppler_path:
+            poppler_path = filedialog.askopenfilename(title='Select the poppler...')
+        if not poppler_path:
+            return
         try:
-            file_bytes = self.check_and_get_file_bytes_from_path_or_bytes(file_path_or_bytes)
-            if not self.is_pdf(file_bytes):
-                if not self.is_image(file_path_or_bytes=file_bytes):
+            with open(join(dirname(__file__), 'valid.pdf'), 'rb') as f:
+                data = f.read()
+            convert_from_bytes(pdf_file=data, poppler_path=poppler_path)
+            valid_poppler_path = True
+        except Exception as e:
+            print(e)
+            valid_poppler_path = False
+            poppler_path = None
+    if data != poppler_path:
+        with open(root_poppler_path, 'w', encoding='utf-8') as f:
+            f.write(poppler_path)    
+    return poppler_path
+
+class PDFImageHandler:
+    poppler_path = get_valid_poppler_path(root_poppler_path)
+    
+    @classmethod
+    def get_list_of_images_bytes(cls, file_path_or_bytes:str|bytes):
+        try:
+            file_bytes = cls.check_and_get_file_bytes_from_path_or_bytes(file_path_or_bytes)
+            if not cls.is_pdf(file_bytes):
+                if not cls.is_image(file_path_or_bytes=file_bytes):
                     raise ValueError("input is not a pdf or image file!")
                 return [file_bytes]
             else:
-                to_convert = convert_from_bytes(file_bytes, poppler_path=self.poppler_path)
+                to_convert = convert_from_bytes(file_bytes, poppler_path=cls.poppler_path)
                 return [image_to_bytes(im) for im in to_convert]
         except Exception as e:
             raise ValueError(f"Error processing input. Check if file_path_or_bytes passed is a valid pdf or image path or bytes!\n\nError message: {e}")
+    
+    @classmethod
+    def set_poppler_path(cls, poppler_path:str):
+        cls.poppler_path = get_valid_poppler_path(poppler_path)
 
     @classmethod
     def check_and_get_file_bytes_from_path_or_bytes(cls, pdf_image_path_or_bytes):
