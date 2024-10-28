@@ -2,7 +2,7 @@ from pdf2image import convert_from_bytes
 from PIL import Image
 from io import BytesIO
 from os.path import exists, dirname, join
-from tkinter import filedialog
+from tkinter import filedialog, dialog
 
 root_poppler_path = join(dirname(__file__), 'poppler_path.txt')
 
@@ -23,7 +23,7 @@ def get_valid_poppler_path(poppler_path:str = None, search_for_path:bool = True)
     valid_poppler_path = False
     while not valid_poppler_path:
         if not poppler_path:
-            poppler_path = filedialog.askopenfilename(title='Select the poppler...')
+            poppler_path = filedialog.askdirectory(title='Select the poppler library bin directory...')
         if not poppler_path:
             return
         try:
