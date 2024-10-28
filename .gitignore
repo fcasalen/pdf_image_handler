@@ -1,0 +1,7 @@
+*.env
+*.zip
+__pycache__
+*egg-info*
+*dist*
+*.gitkeep
+*build*
