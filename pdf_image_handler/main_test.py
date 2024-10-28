@@ -1,12 +1,16 @@
 from mocks_handler import MocksHandler
 from pytest import raises
-from .main import PDFImageHandler
+from .main import PDFImageHandler, root_poppler_path, get_valid_poppler_path
 
 mh = MocksHandler()
 mh.get_mocks_folder()
 image_path = mh.get_filepath('image.jpg')
 pdf_path = mh.get_filepath('valid.pdf')
 invalid_pdf = mh.get_filepath('invalid.pdf')
+
+def test_get_valid_poppler_path():
+    assert get_valid_poppler_path(poppler_path=None, search_for_path=False) == None
+    assert get_valid_poppler_path(poppler_path=root_poppler_path, search_for_path=False)
 
 def test_image():
     assert PDFImageHandler.is_image(image_path)

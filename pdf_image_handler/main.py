@@ -11,12 +11,15 @@ def image_to_bytes(image):
     image.save(buffered, format="PNG")
     return buffered.getvalue()
 
-def get_valid_poppler_path(poppler_path:str = None):
-    if poppler_path == root_poppler_path:
-        with open(root_poppler_path, 'r', encoding='utf-8') as f:
-            poppler_path = f.read()
-    if not exists(poppler_path):
-        poppler_path = None
+def get_valid_poppler_path(poppler_path:str = None, search_for_path:bool = True):
+    if poppler_path:
+        if not exists(poppler_path):
+            poppler_path = None
+        elif poppler_path == root_poppler_path:
+            with open(root_poppler_path, 'r', encoding='utf-8') as f:
+                poppler_path = f.read()
+    if not search_for_path:
+        return poppler_path
     valid_poppler_path = False
     while not valid_poppler_path:
         if not poppler_path:
