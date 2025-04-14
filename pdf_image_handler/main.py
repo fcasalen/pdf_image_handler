@@ -3,6 +3,7 @@ from PIL import Image
 from io import BytesIO
 from os.path import exists, dirname, join
 from tkinter import filedialog
+from tqdm import tqdm
 
 root_poppler_path = join(dirname(__file__), 'poppler_path.txt')
 
@@ -53,7 +54,7 @@ class PDFImageHandler:
                 return [file_bytes]
             else:
                 to_convert = convert_from_bytes(file_bytes, poppler_path=cls.poppler_path)
-                return [image_to_bytes(im) for im in to_convert]
+                return [image_to_bytes(im) for im in tqdm(to_convert, desc="Converting PDF pages to images", unit='pages')]
         except Exception as e:
             raise ValueError(f"Error processing input. Check if file_path_or_bytes passed is a valid pdf or image path or bytes!\n\nError message: {e}")
     

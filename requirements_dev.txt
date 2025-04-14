@@ -1,4 +1,6 @@
+mocks_handler
 pdf2image
 pillow
+pytest
 setuptools
 tqdm
