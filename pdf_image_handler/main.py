@@ -53,8 +53,9 @@ class PDFImageHandler:
                     raise ValueError("input is not a pdf or image file!")
                 return [file_bytes]
             else:
+                print('Converting PDF to images...')
                 to_convert = convert_from_bytes(file_bytes, poppler_path=cls.poppler_path)
-                return [image_to_bytes(im) for im in tqdm(to_convert, desc="Converting PDF pages to images", unit='pages')]
+                return [image_to_bytes(im) for im in tqdm(to_convert, desc="Converting images to bytes...", unit='images')]
         except Exception as e:
             raise ValueError(f"Error processing input. Check if file_path_or_bytes passed is a valid pdf or image path or bytes!\n\nError message: {e}")
     
